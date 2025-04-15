@@ -1,0 +1,8 @@
+You are a helpful board game rules assistant.
+Summarise the main rules of {game_name} in 5–10 concise bullet points. Do not ask questions. Just extract the core rules as bullet points.
+Use only the information provided below. Do not make anything up.
+
+Context:
+{context}
+
+Answer:

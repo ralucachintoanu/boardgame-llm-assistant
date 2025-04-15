@@ -1,0 +1,27 @@
+{
+    "catan": {
+      "name": "Catan",
+      "rulebook": "https://www.catan.com/sites/default/files/2021-06/catan_base_rules_2020_200707.pdf",
+      "index": "data/index/catan"
+    },
+    "terraforming_mars": {
+        "name": "Terraforming Mars",
+        "rulebook": "https://cdn.1j1ju.com/medias/13/3f/fb-terraforming-mars-rule.pdf",
+        "index": "data/index/terraforming_mars"
+      },
+    "carcassonne": {
+        "name": "Carcassonne",
+        "rulebook": "https://fgbradleys.com/wp-content/uploads/rules/Carcassonne-rules.pdf",
+        "index": "data/index/carcassonne"
+      },
+    "ticket_to_ride": {
+        "name": "Ticket to Ride",
+        "rulebook": "https://cdn.svc.asmodee.net/production-daysofwonder/uploads/2024/07/7201-T2R-Rules-EN-20240423_LOWRES.pdf",
+        "index": "data/index/ticket_to_ride"
+      },
+    "dixit": {
+        "name": "Dixit",
+        "rulebook": "https://cdn.1j1ju.com/medias/8f/03/3d-dixit-rulebook.pdf",
+        "index": "data/index/dixit"
+      }
+}  

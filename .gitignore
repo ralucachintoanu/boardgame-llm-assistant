@@ -1,0 +1,21 @@
+# Python virtual environment
+.venv/
+**/__pycache__/
+
+# Logs
+logs/
+*.log
+plugins/
+
+# IDE and editor config files
+.vscode/
+
+# Ignore local environment settings
+.env
+
+# Tests
+**/.coverage
+.DS_Store
+
+# Data folder
+data/cache
