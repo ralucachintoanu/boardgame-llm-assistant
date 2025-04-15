@@ -6,7 +6,7 @@ import logging
 logging.getLogger().setLevel(logging.INFO)
 
 # Load the games configuration
-with open("games.json", "r") as f:
+with open("../games.json", "r") as f:
     games = json.load(f)
 
 # Iterate over each game configuration
