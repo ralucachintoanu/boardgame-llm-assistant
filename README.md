@@ -33,7 +33,10 @@ python main_ingest.py
 ```bash
 python app.py
 ```
-
+or using `just`:
+```bash
+just start-app
+```
 ---
 
 ## 🛠️ Future Improvements
