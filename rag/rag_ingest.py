@@ -41,19 +41,18 @@ def sentence_tokenize_sections(sections: List[str]) -> List[str]:
     return sentences
 
 def clean_extracted_text(text):
-    text = re.sub(r'(\w+)-\n(\w+)', r'\1\2', text)
-    text = re.sub(r'(?<!\n)\n(?!\n)', ' ', text)
-    text = re.sub(r'^\d+$', '', text, flags=re.MULTILINE)
-    text = re.sub(r'\s+', ' ', text).strip()
+    text = re.sub(r'(\w+)-\n(\w+)', r'\1\2', text)         # fix line-break hyphens
+    text = re.sub(r'(?<!\n)\n(?!\n)', ' ', text)           # join single line breaks
+    text = re.sub(r'^\d+$', '', text, flags=re.MULTILINE)  # remove number-only lines
+    text = re.sub(r'\s+', ' ', text).strip()               # collapse whitespace
     return text
 
-
 def smart_chunk(text: str, chunk_size: int = 500, chunk_overlap: int = 50) -> List[str]:
-    sections = split_by_headers(text)
+    cleaned_text = clean_extracted_text(text)
+    sections = split_by_headers(cleaned_text)
     sentences = sentence_tokenize_sections(sections)
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     chunks = text_splitter.split_text(" ".join(sentences))
-    chunks = [clean_extracted_text(chunk) for chunk in chunks]
     logger.debug("Chunks:")
     logger.debug("\n\n---\n\n".join(chunks))
     return chunks
