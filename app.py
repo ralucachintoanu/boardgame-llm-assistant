@@ -1,6 +1,6 @@
 import gradio as gr
 import json
-from main import build_prompt_with_rag, generate_response
+from game_assist import build_prompt_with_rag, generate_response
 
 with open("games.json", "r") as f:
     games = json.load(f)
@@ -26,10 +26,18 @@ with gr.Blocks(theme=custom_theme) as demo:
             value=None
         )
         top_k_selector = gr.Dropdown(
-            choices=[3, 4, 5, 6, 7, 8, 9, 10],
+            choices=[3, 4, 5, 6, 7],
             label="Top K Context Results",
-            value=3
+            value=5
         )
+        model_selector = gr.Dropdown(
+            choices=[
+                ("TinyLlama/TinyLlama-1.1B-Chat-v1.0", "TinyLlama/TinyLlama-1.1B-Chat-v1.0"),
+                ("microsoft/phi-2 (better, but slower)", "microsoft/phi-2"),
+            ],
+            label="Choose a model",
+            value="TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+        )        
 
     with gr.Row():
         with gr.Column():
@@ -60,6 +68,11 @@ with gr.Blocks(theme=custom_theme) as demo:
         inputs=None, 
         outputs=output_box)
     
+    model_selector.change(
+        fn=clear_output, 
+        inputs=None, 
+        outputs=output_box)
+    
     top_k_selector.change(
         fn=clear_output, 
         inputs=None, 
@@ -67,7 +80,7 @@ with gr.Blocks(theme=custom_theme) as demo:
 
     generate_button.click(
         fn=generate_response, 
-        inputs=prompt_box, 
+        inputs=[prompt_box, model_selector], 
         outputs=output_box)
 
 demo.launch()

@@ -9,18 +9,21 @@ with open("games.json", "r") as f:
 games = {k: v["name"] for k, v in games.items()}
 
 
-model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+loaded_models = {}
 
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    device_map={"": "cpu"},
-    torch_dtype=torch.float32,
-    low_cpu_mem_usage=True,
-    trust_remote_code=True,
-    use_safetensors=True,
-)
-
+def _get_model(model_id):
+    if model_id not in loaded_models:
+        tokenizer = AutoTokenizer.from_pretrained(model_id)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_id,
+            device_map={"": "cpu"},
+            torch_dtype=torch.bfloat16,
+            low_cpu_mem_usage=True,
+            trust_remote_code=True,
+            use_safetensors=True,
+        )
+        loaded_models[model_id] = (tokenizer, model)
+    return loaded_models[model_id]
 
 def _build_summary_prompt(game_name, context, path="prompts/summary_template.txt"):
     with open(path, "r") as f:
@@ -47,10 +50,12 @@ def build_prompt_with_rag(game_id, top_k=3):
     return prompt
 
 
-def generate_response(prompt, tokenizer=tokenizer, model=model, max_new_tokens=256):
+def generate_response(prompt, model_id, max_new_tokens=256):
     """
     Generates a response from the model given a prompt.
     """
+    print(f"Using model {model_id}...")
+    tokenizer, model = _get_model(model_id)
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     
     print("Generating response...")
@@ -67,13 +72,9 @@ def generate_response(prompt, tokenizer=tokenizer, model=model, max_new_tokens=2
     return answer
 
 
-def summarize_rules(game_id, game_name):
-    prompt = build_prompt_with_rag(game_id, game_name)   
-    return generate_response(prompt, tokenizer, model)
-
-
-
 if __name__ == "__main__":
-    game_id = list(games.keys())[1]
+    game_id, game_name = list(games.items())[1]
     print(f"Summarizing rules for {game_id}...")
-    print(summarize_rules(game_id))
+    prompt = build_prompt_with_rag(game_id, game_name)   
+    response = generate_response(prompt, model_id="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+    print(response)
